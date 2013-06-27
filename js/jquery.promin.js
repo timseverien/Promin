@@ -113,23 +113,25 @@
         },
 
         'reset': function() {
-            fields.filter('input').each(function(i, el) {
+            fields.each(function(i, el) {
                 var $el = $(el);
-                var val = $el.attr('value');
-                $el.val(val);
+                var node = $el.prop('tagName').toLowerCase();
+
+                if(node === 'div') {
+                    $el = $(el).find('input, textarea, select');
+                    node = $el.prop('tagName').toLowerCase();
+                }
+
+                if(node === 'input') {
+                    $el.val($el.attr('value'));
+                } else if(node === 'textarea') {
+                    $el.val($el.html());
+                } else if(node === 'select') {
+                    $el.val($el.find('option[selected]').attr('value'));
+                }
             });
 
-            fields.filter('textarea').each(function(i, el) {
-                var $el = $(el);
-                var val = $el.html();
-                $el.val(val);
-            });
-
-            fields.filter('select').each(function(i, el) {
-                var $el = $(el);
-                var val = $el.find('option[selected]').attr('value');
-                $el.val(val);
-            });
+            methods.show(0);
         },
 
         'keydownHandler': function(e) {
@@ -138,7 +140,9 @@
                         methods.next();
                         return false;
                 }
-            } else if(settings.actions.cancelOnEscape && e.keyCode === 27) {
+            }
+
+            if(settings.actions.cancelOnEscape && e.keyCode === 27) {
                 methods.reset();
                 return false;
             }
