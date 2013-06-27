@@ -31,7 +31,8 @@
         'actions': {
             'autoSubmit': true,
             'cancelOnEscape': true,
-            'nextOnTab': true
+            'nextOnTab': true,
+            'previousOnBackspace': true
         },
 
         'events': {
@@ -60,7 +61,7 @@
         },
 
         'previous': function() {
-            if(index === 0) return;
+            if(index <= 0) return;
 
             methods.show(--index);
 
@@ -70,7 +71,10 @@
         },
 
         'next': function() {
-            if(index === fields.length - 1);
+            if(index >= fields.length - 1) {
+                methods.submit();
+                return;
+            }
 
             methods.show(++index);
 
@@ -87,16 +91,11 @@
         },
 
         'show': function(i) {
-            index = i; // make sure index is correct
+            index = i;
 
-            if(i >= fields.length) {
-                methods.submit();
-                return;
-            }
-
-            fields.hide().unbind();
+            fields.unbind().hide();
             var field = fields.eq(i).show();
-            var child = field.find('input, select, textarea');
+            var child = field.find('input, select, textarea').unbind();
 
             if(child.length > 0) {
                 child.focus().keydown(methods.keydownHandler)
@@ -143,18 +142,18 @@
 
             if(settings.actions.nextOnTab) {
                 if(e.keyCode === 9 || (e.keyCode === 13 && e.currentTarget.nodeName.toLowerCase() !== 'textarea')) {
-                        methods.next();
-                        return false;
+                    methods.next();
+                    return false;
                 }
+            }
+
+            if(settings.actions.previousOnBackspace && $e.val().length === 0 && e.keyCode === 8) {
+                methods.previous();
+                return false;
             }
 
             if(settings.actions.cancelOnEscape && e.keyCode === 27) {
                 methods.reset();
-                return false;
-            }
-
-            if($e.val().length === 0 && e.keyCode === 8) {
-                methods.previous();
                 return false;
             }
         }
