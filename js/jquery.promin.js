@@ -2,6 +2,7 @@
     var form = null;
     var fields = null;
     var index = -1;
+    var shiftIsPressed = false;
 
     var selectors = [
         'input[type=color]',
@@ -53,7 +54,6 @@
             form = this;
             fields = this.find('.pm-steps').children(selectors.join(','));
 
-            // abort
             if(fields.length === 0) return;
 
             form.addClass('promin');
@@ -99,8 +99,10 @@
 
             if(child.length > 0) {
                 child.focus().keydown(methods.keydownHandler)
+                child.focus().keyup(methods.keyupHandler);
             } else {
                 field.focus().keydown(methods.keydownHandler);
+                field.focus().keyup(methods.keyupHandler);
             }
 
             if(settings.button) {
@@ -141,8 +143,12 @@
             var $e = $(e.currentTarget);
 
             if(settings.actions.nextOnTab) {
+                if(e.keyCode === 16) shiftIsPressed = true;
+
                 if(e.keyCode === 9 || (e.keyCode === 13 && e.currentTarget.nodeName.toLowerCase() !== 'textarea')) {
-                    methods.next();
+                    if(shiftIsPressed) methods.previous();
+                    else methods.next();
+
                     return false;
                 }
             }
@@ -155,6 +161,12 @@
             if(settings.actions.cancelOnEscape && e.keyCode === 27) {
                 methods.reset();
                 return false;
+            }
+        },
+
+        'keyupHandler': function(e) {
+            if(e.keyCode === 16) {
+                shiftIsPressed = false;
             }
         }
     };
