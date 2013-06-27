@@ -60,6 +60,8 @@
         },
 
         'previous': function() {
+            if(index === 0) return;
+
             methods.show(--index);
 
             if(settings.events.previous) {
@@ -68,6 +70,8 @@
         },
 
         'next': function() {
+            if(index === fields.length - 1);
+
             methods.show(++index);
 
             if(settings.events.next) {
