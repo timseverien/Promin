@@ -135,6 +135,8 @@
         },
 
         'keydownHandler': function(e) {
+            var $e = $(e.currentTarget);
+
             if(settings.actions.nextOnTab) {
                 if(e.keyCode === 9 || (e.keyCode === 13 && e.currentTarget.nodeName.toLowerCase() !== 'textarea')) {
                         methods.next();
@@ -144,6 +146,11 @@
 
             if(settings.actions.cancelOnEscape && e.keyCode === 27) {
                 methods.reset();
+                return false;
+            }
+
+            if($e.val().length === 0 && e.keyCode === 8) {
+                methods.previous();
                 return false;
             }
         }
