@@ -52,6 +52,9 @@
             form = this;
             fields = this.find('.pm-steps').children(selectors.join(','));
 
+            // abort
+            if(fields.length === 0) return;
+
             form.addClass('promin');
             methods.next();
         },
@@ -75,10 +78,7 @@
         'submit': function() {
             if(!settings.events.validate || (settings.events.validate && settings.events.validate(fields))) {
                 if(settings.events.submit) settings.events.submit(fields);
-
-                if(settings.actions.autoSubmit) {
-                    form.submit();
-                }
+                if(settings.actions.autoSubmit) form.submit();
             }
         },
 
