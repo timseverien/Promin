@@ -51,44 +51,38 @@
     };
 
     var methods = {
-        'init': function() {
+        'init': function(opts) {
+            $.extend(settings, opts);
+
             form = this;
             fields = this.find('.pm-steps').children(selectors.join(','));
 
             if(fields.length === 0) return;
 
             form.addClass('promin');
-            methods.next();
+            methods.next(true);
         },
 
-        'previous': function() {
+        'previous': function(ignoreEvents) {
             if(index <= 0) return;
 
-            methods.show(--index);
+            methods.show(--index, ignoreEvents);
 
-            if(settings.events.previous) {
+            if(!ignoreEvents && settings.events.previous) {
                 settings.events.previous(index);
-            }
-
-            if(settings.events.change) {
-                settings.events.change(index);
             }
         },
 
-        'next': function() {
+        'next': function(ignoreEvents) {
             if(index >= fields.length - 1) {
                 methods.submit();
                 return;
             }
 
-            methods.show(++index);
+            methods.show(++index, ignoreEvents);
 
-            if(settings.events.next) {
+            if(!ignoreEvents && settings.events.next) {
                 settings.events.next(index);
-            }
-
-            if(settings.events.change) {
-                settings.events.change(index);
             }
         },
 
@@ -99,7 +93,7 @@
             }
         },
 
-        'show': function(i) {
+        'show': function(i, ignoreEvents) {
             index = i;
 
             fields.unbind().hide();
@@ -125,7 +119,7 @@
                 }
             }
 
-            if(settings.events.change) {
+            if(!ignoreEvents && settings.events.change) {
                 settings.events.change(index);
             }
         },
@@ -184,15 +178,11 @@
         }
     };
 
-    $.fn.promin = function(a, b) {
-        if(typeof a === 'string' && methods.hasOwnProperty(a)) {
-            if(typeof b === 'undefined') methods[a].call(this);
-            else methods[a].call(this, b);
-        } else if(typeof a === 'object') {
-            $.extend(settings, a);
-            methods.init.call(this);
-        } else if(!a) {
-            methods.init.call(this);
+    $.fn.promin = function(opt) {
+        if(methods[opt]) {
+            return methods[opt].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else if (typeof opt === 'object' || !opt) {
+            return methods.init.apply(this, arguments);
         }
 
         return this;
