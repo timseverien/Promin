@@ -66,11 +66,11 @@
         'previous': function(ignoreEvents) {
             if(index <= 0) return;
 
-            methods.show(--index, ignoreEvents);
-
             if(!ignoreEvents && settings.events.previous) {
-                settings.events.previous(index);
+                if(!settings.events.previous(index)) return false;
             }
+
+            methods.show(--index, ignoreEvents);
         },
 
         'next': function(ignoreEvents) {
@@ -79,11 +79,11 @@
                 return;
             }
 
-            methods.show(++index, ignoreEvents);
-
             if(!ignoreEvents && settings.events.next) {
-                settings.events.next(index);
+                if(!settings.events.next(index)) return false;
             }
+
+            methods.show(++index, ignoreEvents);
         },
 
         'submit': function() {
@@ -94,6 +94,10 @@
         },
 
         'show': function(i, ignoreEvents) {
+            if(!ignoreEvents && settings.events.change) {
+                if(!settings.events.change(index)) return false;
+            }
+
             index = i;
 
             fields.unbind().hide();
@@ -117,10 +121,6 @@
                     settings.button.addClass('submit');
                     settings.button.unbind().click(methods.submit);
                 }
-            }
-
-            if(!ignoreEvents && settings.events.change) {
-                settings.events.change(index);
             }
         },
 
