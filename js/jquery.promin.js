@@ -39,6 +39,7 @@
         'events': {
             'next': null,
             'previous': null,
+            'change': null,
             'submit': null,
             'validate': null
         },
@@ -68,6 +69,10 @@
             if(settings.events.previous) {
                 settings.events.previous(index);
             }
+
+            if(settings.events.change) {
+                settings.events.change(index);
+            }
         },
 
         'next': function() {
@@ -80,6 +85,10 @@
 
             if(settings.events.next) {
                 settings.events.next(index);
+            }
+
+            if(settings.events.change) {
+                settings.events.change(index);
             }
         },
 
@@ -114,6 +123,10 @@
                     settings.button.addClass('submit');
                     settings.button.unbind().click(methods.submit);
                 }
+            }
+
+            if(settings.events.change) {
+                settings.events.change(index);
             }
         },
 
@@ -173,7 +186,7 @@
 
     $.fn.promin = function(a, b) {
         if(typeof a === 'string' && methods.hasOwnProperty(a)) {
-            if(!b) methods[a].call(this);
+            if(typeof b === 'undefined') methods[a].call(this);
             else methods[a].call(this, b);
         } else if(typeof a === 'object') {
             $.extend(settings, a);
