@@ -1,180 +1,224 @@
 (function($) {
-    var form = null;
-    var fields = null;
     var index = -1;
-    var shiftIsPressed = false;
-
-    var selectors = [
-        'input[type=color]',
-        'input[type=date]',
-        'input[type=datetime]',
-        'input[type=datetime-local]',
-        'input[type=email]',
-        'input[type=file]',
-        'input[type=month]',
-        'input[type=number]',
-        'input[type=password]',
-        'input[type=range]',
-        'input[type=search]',
-        'input[type=tel]',
-        'input[type=time]',
-        'input[type=text]',
-        'input[type=url]',
-        'input[type=week]',
-        'textarea',
-        'select',
-        '.pm-step'
-    ];
+    var $form, $steps;
+    var keys = [];
 
     var settings = {
-        'button': null,
+        'ajaxCallback': null,
 
         'actions': {
-            'autoSubmit': true,
-            'cancelOnEscape': true,
-            'nextOnTab': true,
-            'previousOnBackspace': true
+            'submit': 'default'
         },
 
         'events': {
+            'change': null,
             'next': null,
             'previous': null,
-            'change': null,
             'submit': null,
-            'validate': null
+            'reset': null
         },
 
-        'labels': {
-            'next': 'Next',
-            'submit': 'Send'
+        'shortcuts': {
+            'next': [9, 13],
+            'previous': [[9, 16]],
+            'reset': [27]
         }
     };
 
     var methods = {
-        'init': function(opts) {
-            $.extend(settings, opts);
+        'next': function(ignoreEvents) {
+            var next = index + 1;
 
-            form = this;
-            fields = this.find('.pm-steps').children(selectors.join(','));
+            if(!ignoreEvents && settings.events && settings.events.next && typeof settings.events.next === 'function') {
+                if(settings.events.next.call(this, i) === false) return;
+            }
 
-            if(fields.length === 0) return;
-
-            form.addClass('promin');
-            methods.next(true);
+            if(next === $steps.length) methods.submit();
+            else methods.show(next);
         },
 
         'previous': function(ignoreEvents) {
-            if(index <= 0) return;
+            var next = index - 1;
 
-            if(!ignoreEvents && settings.events.previous) {
-                if(!settings.events.previous(index)) return false;
+            if(!ignoreEvents && settings.events && settings.events.previous && typeof settings.events.previous === 'function') {
+                if(settings.events.previous.call(this, i) === false) return;
             }
 
-            methods.show(--index, ignoreEvents);
-        },
-
-        'next': function(ignoreEvents) {
-            if(index >= fields.length - 1) {
-                methods.submit();
-                return;
-            }
-
-            if(!ignoreEvents && settings.events.next) {
-                if(!settings.events.next(index)) return false;
-            }
-
-            methods.show(++index, ignoreEvents);
-        },
-
-        'submit': function() {
-            if(!settings.events.validate || (settings.events.validate && settings.events.validate(fields))) {
-                if(settings.events.submit) settings.events.submit(fields);
-                if(settings.actions.autoSubmit) form.submit();
-            }
+            if(next < 0) return;
+            methods.show(next);
         },
 
         'show': function(i, ignoreEvents) {
-            if(!ignoreEvents && settings.events.change) {
-                if(!settings.events.change(index)) return false;
+            var step, field;
+
+            if(!ignoreEvents && settings.events && settings.events.change && typeof settings.events.change === 'function') {
+                if(settings.events.change.call(this, i) === false) return;
+            }
+
+            step = $steps.eq(index);
+            field = pmethods.getField(step);
+
+            step.hide();
+            field.blur();
+
+            if(i < $steps.length) {
+                step = $steps.eq(i);
+                field = pmethods.getField(step);
+
+                step.show();
+                field.focus();
             }
 
             index = i;
+        },
 
-            fields.unbind().hide();
-            var field = fields.eq(i).show();
-            var child = field.find('input, select, textarea').unbind();
-
-            if(child.length > 0) {
-                child.focus().keydown(methods.keydownHandler)
-                child.focus().keyup(methods.keyupHandler);
-            } else {
-                field.focus().keydown(methods.keydownHandler);
-                field.focus().keyup(methods.keyupHandler);
+        'submit': function(ignoreEvents) {
+            if(!ignoreEvents && settings.events && settings.events.submit && typeof settings.events.submit === 'function') {
+                var fields = $steps.find('input, textarea, select');
+                if(settings.events.submit.call(this, fields) === false) return;
             }
 
-            if(settings.button) {
-                if(i < fields.length - 1) {
-                    settings.button.val(settings.labels.next);
-                    settings.button.unbind().click(methods.next);
-                } else {
-                    settings.button.val(settings.labels.submit);
-                    settings.button.addClass('submit');
-                    settings.button.unbind().click(methods.submit);
-                }
+            if(settings.actions.submit && settings.actions.submit === 'default') {
+                $form.submit();
+            } else if(settings.actions.submit && settings.actions.submit === 'ajax') {
+                var url = $form.attr('action');
+                var fields = {'ajax': true};
+
+                $form.find('input, textarea, select').each(function(i, e) {
+                    var name = $(e).attr('name');
+                    var value = $(e).val();
+
+                    if(typeof name === 'string' && name.length <= 0) return;
+
+                    fields[name] = value;
+                });
+
+                $.ajax({
+                    'cache': false,
+                    'complete': settings.ajaxCallback,
+                    'data': fields,
+                    'type': 'POST',
+                    'url': url
+                });
             }
         },
 
-        'reset': function() {
-            fields.each(function(i, el) {
-                var $el = $(el);
-                var node = $el.prop('tagName').toLowerCase();
+        'reset': function(ignoreEvents) {
+            methods.show(0);
 
-                if(node === 'div') {
-                    $el = $(el).find('input, textarea, select');
-                    node = $el.prop('tagName').toLowerCase();
-                }
+            $steps.find('input').each(pmethods.resetInput);
+            $steps.find('textarea').each(pmethods.resetTextarea);
+            $steps.find('select').each(pmethods.resetSelect);
 
-                if(node === 'input') {
-                    $el.val($el.attr('value'));
-                } else if(node === 'textarea') {
-                    $el.val($el.html());
-                } else if(node === 'select') {
-                    $el.val($el.find('option[selected]').attr('value'));
-                }
+            if(!ignoreEvents && settings.events && settings.events.reset && typeof settings.events.reset === 'function') {
+                settings.events.reset.call(this);
+            }
+        }
+    };
+
+    var pmethods = {
+        'init': function(opt) {
+            $.extend(settings, opt);
+
+            $form = this;
+            $steps = this.find('.pm-step');
+            $form.addClass('promin');
+
+            $steps.hide().each(function(i, e) {
+                var $e = $(e);
+                var field = pmethods.getField($e);
+                field.keydown(pmethods.keydownHandler);
+                field.keyup(pmethods.keyupHandler);
             });
 
-            methods.show(0);
+            if($steps.length > 0) {
+                methods.show(0);
+            }
         },
 
         'keydownHandler': function(e) {
-            var $e = $(e.currentTarget);
+            keys.push(e.keyCode);
 
-            if(settings.actions.nextOnTab) {
-                if(e.keyCode === 16) shiftIsPressed = true;
+            if(!settings.shortcuts) return;
 
-                if(e.keyCode === 9 || (e.keyCode === 13 && e.currentTarget.nodeName.toLowerCase() !== 'textarea')) {
-                    if(shiftIsPressed) methods.previous();
-                    else methods.next();
-
-                    return false;
-                }
+            if(settings.shortcuts.next && settings.shortcuts.next.length > 0 && pmethods.keydown.apply(null, settings.shortcuts.next)) {
+                methods.next();
+                return false;
             }
 
-            if(settings.actions.previousOnBackspace && $e.val().length === 0 && e.keyCode === 8) {
+            if(settings.shortcuts.previous && settings.shortcuts.previous.length > 0 && pmethods.keydown.apply(null, settings.shortcuts.previous)) {
                 methods.previous();
                 return false;
             }
 
-            if(settings.actions.cancelOnEscape && e.keyCode === 27) {
+            if(settings.shortcuts.reset && settings.shortcuts.reset.length > 0 && pmethods.keydown.apply(null, settings.shortcuts.reset)) {
                 methods.reset();
                 return false;
             }
         },
 
         'keyupHandler': function(e) {
-            if(e.keyCode === 16) {
-                shiftIsPressed = false;
+            var i = keys.length;
+
+            while(i--) {
+                if(keys[i] === e.keyCode) {
+                    keys.splice(i, 1);
+                }
             }
+        },
+
+        'keydown': function() {
+            var keysdown = false;
+
+            $.each(arguments, function(i, keyset) {
+                if(typeof keyset === 'number') {
+                    if(keys.length !== 1) return;
+
+                    if($.inArray(keyset, keys) >= 0) {
+                        keysdown = true;
+                        return false;
+                    }
+                } else {
+                    if(keyset.length !== keys.length) return;
+
+                    var equal = 0;
+
+                    $.each(keyset, function(i, key) {
+                        if($.inArray(key, keys) >= 0) equal++;
+                    });
+
+                    if(equal === keyset.length) {
+                        keysdown = true;
+                        return false;
+                    }
+                }
+            });
+
+            return keysdown;
+        },
+
+        'resetInput': function(i, e) {
+            var $e = $(e);
+            $e.val($e.attr('value'));
+        },
+
+        'resetTextarea': function(i, e) {
+            var $e = $(e);
+            $e.val($e.html());
+        },
+
+        'resetSelect': function(i, e) {
+            var $e = $(e);
+            var val = $e.find('option[selected]').attr('value');
+            $e.val(val);
+        },
+
+        'getField': function(e) {
+            var tag = e.prop('nodeName').toLowerCase();
+            var desc = e.find('input, textarea, select');
+
+            if(tag === 'input' || tag === 'textarea' || tag === 'select') return tag;
+            return desc;
         }
     };
 
@@ -182,7 +226,7 @@
         if(methods[opt]) {
             return methods[opt].apply(this, Array.prototype.slice.call(arguments, 1));
         } else if (typeof opt === 'object' || !opt) {
-            return methods.init.apply(this, arguments);
+            return pmethods.init.apply(this, arguments);
         }
 
         return this;
