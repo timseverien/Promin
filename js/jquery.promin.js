@@ -29,8 +29,8 @@
         'next': function(ignoreEvents) {
             var next = index + 1;
 
-            if(!ignoreEvents && settings.events && settings.events.next && typeof settings.events.next === 'function') {
-                if(settings.events.next.call(this, i) === false) return;
+            if(pmethods.eventIsSet('next', ignoreEvents)) {
+                if(settings.events.next.call(this, next) === false) return;
             }
 
             if(next === $steps.length) methods.submit();
@@ -40,8 +40,8 @@
         'previous': function(ignoreEvents) {
             var next = index - 1;
 
-            if(!ignoreEvents && settings.events && settings.events.previous && typeof settings.events.previous === 'function') {
-                if(settings.events.previous.call(this, i) === false) return;
+            if(pmethods.eventIsSet('previous', ignoreEvents)) {
+                if(settings.events.next.call(this, next) === false) return;
             }
 
             if(next < 0) return;
@@ -51,8 +51,8 @@
         'show': function(i, ignoreEvents) {
             var step, field;
 
-            if(!ignoreEvents && settings.events && settings.events.change && typeof settings.events.change === 'function') {
-                if(settings.events.change.call(this, i) === false) return;
+            if(pmethods.eventIsSet('previous', ignoreEvents)) {
+                if(settings.events.previous.call(this, i) === false) return;
             }
 
             step = $steps.eq(index);
@@ -73,7 +73,7 @@
         },
 
         'submit': function(ignoreEvents) {
-            if(!ignoreEvents && settings.events && settings.events.submit && typeof settings.events.submit === 'function') {
+            if(pmethods.eventIsSet('submit', ignoreEvents)) {
                 var fields = $steps.find('input, textarea, select');
                 if(settings.events.submit.call(this, fields) === false) return;
             }
@@ -110,7 +110,7 @@
             $steps.find('textarea').each(pmethods.resetTextarea);
             $steps.find('select').each(pmethods.resetSelect);
 
-            if(!ignoreEvents && settings.events && settings.events.reset && typeof settings.events.reset === 'function') {
+            if(pmethods.eventIsSet('reset', ignoreEvents)) {
                 settings.events.reset.call(this);
             }
         }
@@ -219,6 +219,10 @@
 
             if(tag === 'input' || tag === 'textarea' || tag === 'select') return tag;
             return desc;
+        },
+
+        'eventIsSet': function(name, ignoreEvents) {
+            return (!ignoreEvents && settings.events && settings.events[name] && typeof settings.events[name] === 'function');
         }
     };
 
