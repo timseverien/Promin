@@ -217,7 +217,7 @@
             var tag = e.prop('nodeName').toLowerCase();
             var desc = e.find('input, textarea, select');
 
-            if(tag === 'input' || tag === 'textarea' || tag === 'select') return tag;
+            if(tag === 'input' || tag === 'textarea' || tag === 'select') return e;
             return desc;
         },
 
