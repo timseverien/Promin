@@ -127,13 +127,12 @@
             $steps.hide().each(function(i, e) {
                 var $e = $(e);
                 var field = pmethods.getField($e);
+
                 field.keydown(pmethods.keydownHandler);
                 field.keyup(pmethods.keyupHandler);
             });
 
-            if($steps.length > 0) {
-                methods.show(0);
-            }
+            if($steps.length > 0) methods.show(0);
         },
 
         'keydownHandler': function(e) {
@@ -234,5 +233,28 @@
         }
 
         return this;
+    };
+
+    $.promin = {
+        key: {
+            'backspace': 8,
+            'tab': 9,
+            'enter': 13, // alias for return
+            'return': 13,
+            'shift': 16,
+            'ctrl': 17,
+            'alt': 18,
+            'caps': 20,
+            'space': 32,
+            'pageup': 33,
+            'pagedown': 34,
+            'end': 35,
+            'home': 36,
+            'left': 37,
+            'up': 38,
+            'right': 39,
+            'down': 40,
+            'del': 46 // closure compiler dies when I use 'delete'
+        }
     };
 })(jQuery);
