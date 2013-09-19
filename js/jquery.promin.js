@@ -3,6 +3,30 @@
     var $form, $steps;
     var keys = [];
 
+    $.promin = {
+        key: {
+            'backspace': 8,
+            'tab': 9,
+            'enter': 13, // alias for return
+            'return': 13,
+            'shift': 16,
+            'ctrl': 17,
+            'alt': 18,
+            'caps': 20,
+            'escape': 27,
+            'space': 32,
+            'pageup': 33,
+            'pagedown': 34,
+            'end': 35,
+            'home': 36,
+            'left': 37,
+            'up': 38,
+            'right': 39,
+            'down': 40,
+            'del': 46 // closure compiler dies when I use 'delete'
+        }
+    };
+
     var settings = {
         'ajaxCallback': null,
 
@@ -19,9 +43,9 @@
         },
 
         'shortcuts': {
-            'next': [9, 13],
-            'previous': [[9, 16]],
-            'reset': [27]
+            'next': [$.promin.key.tab, $.promin.key.enter],
+            'previous': [[$.promin.key.tab, $.promin.key.shift]],
+            'reset': [$.promin.key.escape]
         }
     };
 
@@ -233,28 +257,5 @@
         }
 
         return this;
-    };
-
-    $.promin = {
-        key: {
-            'backspace': 8,
-            'tab': 9,
-            'enter': 13, // alias for return
-            'return': 13,
-            'shift': 16,
-            'ctrl': 17,
-            'alt': 18,
-            'caps': 20,
-            'space': 32,
-            'pageup': 33,
-            'pagedown': 34,
-            'end': 35,
-            'home': 36,
-            'left': 37,
-            'up': 38,
-            'right': 39,
-            'down': 40,
-            'del': 46 // closure compiler dies when I use 'delete'
-        }
     };
 })(jQuery);
