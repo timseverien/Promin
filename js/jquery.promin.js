@@ -88,8 +88,8 @@
         'show': function(i, ignoreEvents) {
             var step, field;
 
-            if(pmethods.eventIsSet('previous', ignoreEvents)) {
-                if(settings.events.previous.call(this, i) === false) return;
+            if(pmethods.eventIsSet('change', ignoreEvents)) {
+                if(settings.events.change.call(this, i) === false) return;
             }
 
             step = $steps.eq(index);
