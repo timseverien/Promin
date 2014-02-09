@@ -42,6 +42,7 @@
 
     var settings = {
         'ajaxCallback': null,
+	    'autofocus': true,
 
         'actions': {
             'submit': 'default'
@@ -85,7 +86,7 @@
             methods.show(next);
         },
 
-        'show': function(i, ignoreEvents) {
+        'show': function(i, ignoreEvents, init) {
             var step, field;
 
             if(pmethods.eventIsSet('change', ignoreEvents)) {
@@ -103,15 +104,17 @@
                 field = pmethods.getField(step);
 
                 step.show();
-                field.focus();
+                if(!init || settings.autofocus) field.focus();
             }
 
             index = i;
         },
 
         'submit': function(ignoreEvents) {
+	        var fields;
+
             if(pmethods.eventIsSet('submit', ignoreEvents)) {
-                var fields = $steps.find('input, textarea, select');
+                fields = $steps.find('input, textarea, select');
                 if(settings.events.submit.call(this, fields) === false) return;
             }
 
@@ -119,16 +122,8 @@
                 $form.submit();
             } else if(settings.actions.submit && settings.actions.submit === 'ajax') {
                 var url = $form.attr('action');
-                var fields = {'ajax': true};
-
-                $form.find('input, textarea, select').each(function(i, e) {
-                    var name = $(e).attr('name');
-                    var value = $(e).val();
-
-                    if(typeof name === 'string' && name.length <= 0) return;
-
-                    fields[name] = value;
-                });
+	            fields = $form.serialize();
+	            fields.ajax = true;
 
                 $.ajax({
                     'cache': false,
@@ -141,7 +136,7 @@
         },
 
         'reset': function(ignoreEvents) {
-            methods.show(0);
+            methods.show(0, false, true);
 
             $steps.find('input').each(pmethods.resetInput);
             $steps.find('textarea').each(pmethods.resetTextarea);
@@ -169,7 +164,7 @@
                 field.keyup(pmethods.keyupHandler);
             });
 
-            if($steps.length > 0) methods.show(0);
+            if($steps.length > 0) methods.show(0, false, true);
         },
 
         'keydownHandler': function(e) {
