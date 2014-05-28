@@ -53,19 +53,35 @@
 </div>
 
 <script type="text/javascript">
+    // Cache the form
     var $form = $('#form');
 
+    // Stuff for the progress bar
     var $bar = $('.progress-bar .bar');
     var steps = $('.pm-step').length;
 
+    // Initialize Promin
     $form.promin({
+        // Set method to AJAX
+        // Still uses the form's action URL
+        actions: {
+            submit: 'ajax'
+        },
+
+        // Want to update the bar on every change
         events: {
             change: function(i) {
                 $bar.css('width', (i / steps * 100) + '%');
             }
+        },
+
+        // Run this when AJAX is sent
+        ajaxCallback: function(data) {
+            alert('Data was sent (nowhere) via AJAX!');
         }
     });
 
+    // Tell the button to go to the next step
     $('#navigation').on('click', function() {
         $form.promin('next');
     });
