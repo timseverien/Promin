@@ -3,6 +3,6 @@ Promin
 
 A jQuery plugin to boost your HTML forms to level awesome!
 
-By providing the form into chunks, it will consume less space, will look much better and it gives the user an actual experience, so he doesn't feel like he's just filling in another dull form.
+By presenting the form in chunks, it will consume less space, look better and improves a user’s experience.
 
-For more information, go to: http://timseverien.nl/promin/
+For more information and documentation, see http://timseverien.nl/projects/promin/
