@@ -1,0 +1,47 @@
+body {
+    background-color: #fafafa;
+}
+
+.container {
+    background-color: white;
+    margin: 0 auto;
+    padding: 80px;
+}
+
+.row {
+    border-bottom: 1px solid #ccc;
+    padding: 40px 0;
+}
+
+.row.noborder {
+    border: 0;
+}
+
+.example {
+    background-color: #fafafa;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.table { margin-bottom: 40px; }
+.table td { padding: 10px; }
+
+.table thead {
+    background-color: #40a6ff;
+    color: white;
+}
+
+.table thead td { border: 0; }
+
+
+.progress-bar {
+    background-color: #eee;
+    height: 0.25em;
+}
+
+.progress-bar .bar {
+    background-color: #ccc;
+    display: block;
+    height: 0.25em;
+    width: 0%;
+}
