@@ -16,53 +16,53 @@
 
     $.promin = {
         key: {
-            'backspace': 8,
-            'tab': 9,
-            'enter': 13, // alias for return
-            'return': 13,
-            'shift': 16,
-            'ctrl': 17,
-            'alt': 18,
-            'caps': 20,
-            'escape': 27,
-            'space': 32,
-            'pageup': 33,
-            'pagedown': 34,
-            'end': 35,
-            'home': 36,
-            'left': 37,
-            'up': 38,
-            'right': 39,
-            'down': 40,
-            'del': 46 // closure compiler dies when I use 'delete'
+            backspace: 8,
+            tab: 9,
+            enter: 13, // alias for return
+            return: 13,
+            shift: 16,
+            ctrl: 17,
+            alt: 18,
+            caps: 20,
+            escape: 27,
+            space: 32,
+            pageup: 33,
+            pagedown: 34,
+            end: 35,
+            home: 36,
+            left: 37,
+            up: 38,
+            right: 39,
+            down: 40,
+            del: 46
         }
     };
 
     var settings = {
-        'ajaxCallback': null,
-	    'autofocus': true,
+        ajaxCallback: null,
+        autofocus: true,
 
-        'actions': {
-            'submit': 'default'
+        actions: {
+            submit: 'default'
         },
 
-        'events': {
-            'change': null,
-            'next': null,
-            'previous': null,
-            'submit': null,
-            'reset': null
+        events: {
+            change: null,
+            next: null,
+            previous: null,
+            submit: null,
+            reset: null
         },
 
-        'shortcuts': {
-            'next': [$.promin.key.tab, $.promin.key.enter],
-            'previous': [[$.promin.key.tab, $.promin.key.shift]],
-            'reset': [$.promin.key.escape]
+        shortcuts: {
+            next: [$.promin.key.tab, $.promin.key.enter],
+            previous: [[$.promin.key.tab, $.promin.key.shift]],
+            reset: [$.promin.key.escape]
         }
     };
 
     var methods = {
-        'next': function(ignoreEvents) {
+        next: function(ignoreEvents) {
             var next = index + 1;
 
             if(pmethods.eventIsSet('next', ignoreEvents)) {
@@ -73,7 +73,7 @@
             else methods.show(next);
         },
 
-        'previous': function(ignoreEvents) {
+        previous: function(ignoreEvents) {
             var next = index - 1;
 
             if(pmethods.eventIsSet('previous', ignoreEvents)) {
@@ -84,7 +84,7 @@
             methods.show(next);
         },
 
-        'show': function(i, ignoreEvents, init) {
+        show: function(i, ignoreEvents, init) {
             var step, field;
 
             if(pmethods.eventIsSet('change', ignoreEvents)) {
@@ -108,8 +108,8 @@
             index = i;
         },
 
-        'submit': function(ignoreEvents) {
-	        var fields;
+        submit: function(ignoreEvents) {
+            var fields;
 
             if(pmethods.eventIsSet('submit', ignoreEvents)) {
                 fields = $steps.find('input, textarea, select');
@@ -120,20 +120,20 @@
                 $form.submit();
             } else if(settings.actions.submit && settings.actions.submit === 'ajax') {
                 var url = $form.attr('action');
-	            fields = $form.serialize();
-	            fields.ajax = true;
+                fields = $form.serialize();
+                fields.ajax = true;
 
                 $.ajax({
-                    'cache': false,
-                    'complete': settings.ajaxCallback,
-                    'data': fields,
-                    'type': 'POST',
-                    'url': url
+                    cache: false,
+                    complete: settings.ajaxCallback,
+                    data: fields,
+                    type: 'POST',
+                    url: url
                 });
             }
         },
 
-        'reset': function(ignoreEvents) {
+        reset: function(ignoreEvents) {
             methods.show(0, false, true);
 
             $steps.find('input').each(pmethods.resetInput);
@@ -147,7 +147,7 @@
     };
 
     var pmethods = {
-        'init': function(opt) {
+        init: function(opt) {
             $.extend(settings, opt);
 
             $form = this;
@@ -165,7 +165,7 @@
             if($steps.length > 0) methods.show(0, false, true);
         },
 
-        'keydownHandler': function(e) {
+        keydownHandler: function(e) {
             keys.push(e.keyCode);
 
             if(!settings.shortcuts) return;
@@ -186,7 +186,7 @@
             }
         },
 
-        'keyupHandler': function(e) {
+        keyupHandler: function(e) {
             var i = keys.length;
 
             while(i--) {
@@ -196,7 +196,7 @@
             }
         },
 
-        'keydown': function() {
+        keydown: function() {
             var keysdown = false;
 
             $.each(arguments, function(i, keyset) {
@@ -226,23 +226,23 @@
             return keysdown;
         },
 
-        'resetInput': function(i, e) {
+        resetInput: function(i, e) {
             var $e = $(e);
             $e.val($e.attr('value'));
         },
 
-        'resetTextarea': function(i, e) {
+        resetTextarea: function(i, e) {
             var $e = $(e);
             $e.val($e.html());
         },
 
-        'resetSelect': function(i, e) {
+        resetSelect: function(i, e) {
             var $e = $(e);
             var val = $e.find('option[selected]').attr('value');
             $e.val(val);
         },
 
-        'getField': function(e) {
+        getField: function(e) {
             var tag = e.prop('nodeName').toLowerCase();
             var desc = e.find('input, textarea, select');
 
@@ -250,7 +250,7 @@
             return desc;
         },
 
-        'eventIsSet': function(name, ignoreEvents) {
+        eventIsSet: function(name, ignoreEvents) {
             return (!ignoreEvents && settings.events && settings.events[name] && typeof settings.events[name] === 'function');
         }
     };
