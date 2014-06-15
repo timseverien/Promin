@@ -247,6 +247,7 @@
             var desc = e.find('input, textarea, select');
 
             if(tag === 'input' || tag === 'textarea' || tag === 'select') return e;
+	        if(desc.length > 0) return desc.eq(0);
             return desc;
         },
 
