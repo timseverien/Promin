@@ -1,0 +1,98 @@
+@import url(//fonts.googleapis.com/css?family=Roboto:900);
+
+body {
+    background-color: #0790d0;
+    color: #d1f0ff;
+    font-size: 125%;
+
+    -webkit-font-smoothing: antialiased;
+}
+
+/********************************
+ * LAYOUT
+********************************/
+
+.container { padding: 1em; }
+.section {
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    margin-top: 2em;
+    padding-top: 1em;
+}
+
+.demo {
+    padding: 1em;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 0.25em;
+}
+
+/********************************
+ * TAGS
+********************************/
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 900;
+}
+
+a {
+    background-image: linear-gradient(180deg, transparent 0%, transparent 95%, #fff 95%);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 0 100%;
+    color: #fff;
+    text-decoration: none;
+
+    -webkit-transition: background 0.2s;
+    -moz-transition: background 0.2s;
+    -ms-transition: background 0.2s;
+    transition: background 0.2s;
+}
+
+a:hover {
+    background-size: 100% 100%;
+}
+
+code, pre {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 0.25em;
+    font-size: 0.7em;
+}
+
+code { padding: 0 0.5em; }
+pre { padding: 1em; }
+
+hr {
+    background-color: rgba(255, 255, 255, 0.25);
+    border: 0;
+    height: 1px;
+    margin: 1em 0;
+}
+
+/********************************
+ * ALTERNATE
+********************************/
+
+h1.hero {
+    color: #0573a6;
+    font-size: 4em;
+    line-height: 1;
+    margin: 0;
+    text-shadow: 0 1px 0 #4ebef1;
+}
+
+/********************************
+ * MEDIA QUERIES
+********************************/
+
+@media only screen and (min-width: 20em) {
+    h1.hero { font-size: 5em; }
+}
+
+@media only screen and (min-width: 30em) {
+    .container {
+        margin: 0 auto;
+        width: 30em;
+    }
+
+    h1.hero { font-size: 7em; }
+}

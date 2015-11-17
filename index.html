@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    <title>Promin - sexy forms</title>
+
+    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/promin.css" />
+
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.promin.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+    <h1 class="hero">Promin</h1>
+    <p>Promin is a jQuery plugin that turns your dull forums into little chunks. But why?</p>
+
+    <ul>
+        <li>It&rsquo;s small</li>
+        <li>It&rsquo;s damn sexy</li>
+        <li>It&rsquo;s effective</li>
+    </ul>
+
+    <div class="section" id="demo">
+        <h1>Demo</h1>
+
+        <div class="demo">
+			<form action="#demo" id="form" enctype="application/x-www-form-urlencoded">
+				<div class="pm-step">
+					<p>What is your name?</p>
+					<input type="text" name="name" autocomplete="off" />
+				</div>
+
+				<div class="pm-step">
+					<p>Could you fill in your e-mail adress please?</p>
+					<input type="email" name="email" placeholder="bob@example.com" autocomplete="off" />
+				</div>
+
+				<div class="pm-step">
+					<p>Is there something you would like to say?<br /><span class="muted">Protip: <code>shift + return</code> for a new line.</span></p>
+					<textarea name="body" autocomplete="off"></textarea>
+				</div>
+
+				<p class="progress-bar">
+					<span class="bar"></span>
+				</p>
+
+				<p class="muted"><input type="button" id="navigation" value="Next step" /> or press <code>tab</code> or <code>return</code></p>
+			</form>
+        </div>
+    </div>
+
+    <div class="section" id="download">
+        <h1>Download</h1>
+        <a href="https://github.com/timseverien/Promin">Download the source code from GitHub</a>
+    </div>
+
+    <div class="section" id="usage">
+        <h1>Usage</h1>
+
+        <h2>HTML</h2>
+        <p>Your HTML needs little change in order for Promin to work. That means your form will still work if Promin does not for whatever reason.</p>
+        <p>All you have to do is add the <code>pm-step</code> class to each step, like so:</p>
+
+        <pre>&lt;form&gt;
+    &lt;div class=&quot;pm-step&quot;&gt;
+        &lt;input name=&quot;name&quot; /&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;pm-step&quot;&gt;
+        &lt;input name=&quot;email&quot; /&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;pm-step&quot;&gt;
+        &lt;textarea name=&quot;message&quot;&gt;&lt;/textarea&gt;
+    &lt;/div&gt;
+&lt;/form&gt;</pre>
+
+        <h2>JavaScript</h2>
+        <pre>$('#form').promin(options);</pre>
+
+        <h3>Options</h3>
+
+        <h4>Actions</h4>
+        <pre>options.actions = {
+    /*
+    submit: 'default' // Submit form normally
+    submit: 'ajax'    // Submit form via AJAX
+    submit: false     // Do nothing (use event handler)
+    */
+
+    submit: 'default'
+};</pre>
+
+        <h4>Events</h4>
+        <pre>options.events = {
+    /*
+    Returning false on any of these events will
+    cancel the operation.
+
+    i: the current field index
+    fields: list of all fields
+    */
+
+    // Called after the field index has changed
+    change: function(i) {},
+
+    // Called after .promin('next') is called
+    next: function(i) {},
+
+    // Called after .promin('previous') is called
+    previous: function(i) {},
+
+    // Called when the form is being submit
+    submit: function(fields) {},
+
+    // Called after .promin('reset') is called
+    reset: function() {}
+};</pre>
+
+        <h4>Shortcuts</h4>
+        <pre>options.shortcuts = {
+    /*
+    Each shortcut (next, previous or reset) consists of an array of shortcuts.
+    One shortcut can need multiple keys, defined as an array.
+
+    next: [
+        9,       // tab
+        13,      // return/enter
+        [13, 17] // enter + ctrl
+    ]
+
+    Note that are different keys are set in $.promin.key as listed below
+    */
+
+    next:     [ $.promin.key.tab, $.promin.key.enter ],   // tab or enter
+    previous: [[ $.promin.key.tab, $.promin.key.shift ]], // tab and shift
+    reset:    [ $.promin.key.escape ]                     // escape
+};
+
+/*
+
+$.promin.key = {
+    backspace: 8,
+    tab: 9,
+    enter: 13, // alias for return
+    return: 13,
+    shift: 16,
+    ctrl: 17,
+    alt: 18,
+    caps: 20,
+    escape: 27,
+    space: 32,
+    pageup: 33,
+    pagedown: 34,
+    end: 35,
+    home: 36,
+    left: 37,
+    up: 38,
+    right: 39,
+    down: 40,
+    del: 46
+}
+
+*/</pre>
+
+        <h4>AJAX callback</h4>
+        <pre>options.ajaxCallback = function(data) {
+    // data: Contents of requested page
+};</pre>
+
+        <h3>Methods</h3>
+        <pre>$('#form').promin('next');     // Move form one step behind
+$('#form').promin('previous'); // Move form one step ahead
+$('#form').promin('show', i);  // Show specific field <i>
+
+$('#form').promin('reset');    // Reset and rewind the form
+$('#form').promin('submit');   // Submit form manually</pre>
+    </div>
+
+    <div class="section">
+        <h1>Questions?</h1>
+
+        <p>Contact <a href="https://twitter.com/timseverien">@timseverien</a> on Twitter or file an issue on <a href="https://github.com/timseverien/Promin">GitHub</a>.</p>
+        <p>Your&rsquo;s sincerely, <a href="https://timseverien.com">Tim Severien</a>.</p>
+    </div>
+</div>
+
+<script>
+// Cache the form
+var $form = $('#form');
+
+// Stuff for the progress bar
+var $bar = $('.progress-bar .bar');
+var steps = $('.pm-step').length;
+
+// Initialize Promin
+$form.promin({
+    // Want to update the bar on every change
+    events: {
+        change: function(i) {
+            $bar.css('width', (i / steps * 100) + '%');
+        }
+    }
+});
+
+// Tell the button to go to the next step
+$('#navigation').on('click', function() {
+    $form.promin('next');
+});
+</script>
+
+</body>
+</html>

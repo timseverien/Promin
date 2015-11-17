@@ -1,0 +1,67 @@
+.promin input[type=color],
+.promin input[type=date],
+.promin input[type=datetime],
+.promin input[type=datetime-local],
+.promin input[type=email],
+.promin input[type=file],
+.promin input[type=month],
+.promin input[type=number],
+.promin input[type=password],
+.promin input[type=range],
+.promin input[type=search],
+.promin input[type=tel],
+.promin input[type=time],
+.promin input[type=text],
+.promin input[type=url],
+.promin input[type=week],
+.promin textarea {
+    background-color: transparent;
+    border: 0;
+    color: #fff;
+    font-family: sans-serif;
+    font-weight: 100;
+    font-size: 2em;
+    outline: 0;
+    padding: 8px 0;
+    margin-bottom: 20px;
+    resize: none;
+}
+
+.promin input[type=button],
+.promin input[type=submit] {
+    border: 0;
+    border-radius: 0.25em;
+    background-color: rgba(255, 255, 255, 0.15);
+    padding: 1em;
+
+    -webkit-transition: background 0.2s;
+    -moz-transition: background 0.2s;
+    -ms-transition: background 0.2s;
+    transition: background 0.2s;
+}
+
+.promin input[type=button]:hover,
+.promin input[type=submit]:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.promin .progress-bar {
+    background-color: rgba(255, 255, 255, 0.25);
+    height: 0.25em;
+}
+
+.promin .progress-bar .bar {
+    background-color: rgba(255, 255, 255, 0.5);
+    display: block;
+    height: 0.25em;
+
+    -webkit-transition: width 0.2s;
+    -moz-transition: width 0.2s;
+    -ms-transition: width 0.2s;
+    transition: width 0.2s;
+}
+
+::-webkit-input-placeholder { color: #fff; opacity: 0.25; }
+:-moz-placeholder { color: #fff; opacity: 0.25; }
+::-moz-placeholder { color: #fff; opacity: 0.25; }
+:-ms-input-placeholder { color: #fff; opacity: 0.25; }
