@@ -1,7 +1,7 @@
 /*
  * jQuery Promin
  * Changes big, dodgy forms into small, compact, minimal ones.
- * http://timseverien.nl
+ * https://timseverien.github.io/promin/
  *
  * Copyright (c) 2013 Tim Severien
  * Released under the GPLv2 license.
