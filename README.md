@@ -2,6 +2,8 @@
 Promin
 ======
 
+[![CDNJS](https://img.shields.io/cdnjs/v/Promin.svg)](https://cdnjs.com/libraries/Promin)
+
 A jQuery plugin to boost your HTML forms to level awesome!
 
 By presenting the form in chunks, it will consume less space, look better and improves a user’s experience.
